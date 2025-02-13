@@ -64,10 +64,17 @@ endif()
 # add dictionary to list of source files
 SET(dk2nuTree_SRCS ${dk2nuTree_SRCS} ${dk2nuTree_DICTIONARY})
 
-add_library(dk2nuTree SHARED ${dk2nuTree_SRCS})
-target_link_libraries(dk2nuTree ${ROOT_LIBRARIES}
+add_library(dk2nuTree_shared SHARED ${dk2nuTree_SRCS})
+add_library(dk2nuTree_static STATIC ${dk2nuTree_SRCS})
+target_link_libraries(dk2nuTree_shared ${ROOT_LIBRARIES}
   ${ROOT_Physics_LIBRARY} ${ROOT_Matrix_LIBRARY}
   ${ADD_ROOT_Imt_LIBRARY} ${TBB_LIBRARY} )
+target_link_libraries(dk2nuTree_static ${ROOT_LIBRARIES}
+  ${ROOT_Physics_LIBRARY} ${ROOT_Matrix_LIBRARY}
+  ${ADD_ROOT_Imt_LIBRARY} ${TBB_LIBRARY} )
+
+set_target_properties(dk2nuTree_shared PROPERTIES OUTPUT_NAME dk2nuTree)
+set_target_properties(dk2nuTree_static PROPERTIES OUTPUT_NAME dk2nuTree)
 
 #MESSAGE("--DK2NU- dk2nuTree section done")
 #MESSAGE(" ")
@@ -75,7 +82,8 @@ target_link_libraries(dk2nuTree ${ROOT_LIBRARIES}
 #----------------------------------------------------------------------------
 # Install the executable to 'bin' directory under CMAKE_INSTALL_PREFIX
 #
-install(TARGETS dk2nuTree DESTINATION lib)
+install(TARGETS dk2nuTree_shared DESTINATION lib)
+install(TARGETS dk2nuTree_static DESTINATION lib)
 install(FILES ${TREEDICTFILES} DESTINATION lib)
 
 #--------------------
